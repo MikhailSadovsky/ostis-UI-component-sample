@@ -19,14 +19,19 @@ Example.PaintPanel.prototype = {
         container.append('<div class="sc-no-default-cmd">Example Component</div>');
         container.append('<button id="newButton" type="button">Узнать все о главном меню</button>');
         container.append('<button id="searchInfoButton" type="button">Поиск главного идентификатора</button>');
+        container.append('<button id="moveToNavigationNode" type="button">Перейти к описанию ключевых узлов навигации</button>');
 
         $('#newButton').click(function () {
 			self._showMainMenuNode();
 		});
 
-        self = this;
+
 		$('#searchInfoButton').click(function () {
 			self._findMainIdentifier();
+		});
+
+		SCWeb.core.Server.resolveScAddr(['ui_menu_na_keynodes'], function (keynodes) {
+			$('#moveToNavigationNode').attr("sc_addr", keynodes['ui_menu_na_keynodes']);
 		});
     },
 
