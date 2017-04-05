@@ -9,6 +9,7 @@ rst="\e[0m"     # Text reset
 
 st=$1
 
+
 stage()
 {
     let "st += 1"
