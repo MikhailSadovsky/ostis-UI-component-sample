@@ -18,9 +18,15 @@ Example.PaintPanel.prototype = {
         var self = this;
         container.append('<div class="sc-no-default-cmd">Example Component</div>');
         container.append('<button id="newButton" type="button">Узнать все о главном меню</button>');
+        container.append('<button id="searchInfoButton" type="button">Поиск главного идентификатора</button>');
 
         $('#newButton').click(function () {
 			self._showMainMenuNode();
+		});
+
+        self = this;
+		$('#searchInfoButton').click(function () {
+			self._findMainIdentifier();
 		});
     },
 
@@ -48,6 +54,29 @@ Example.PaintPanel.prototype = {
 				});
 			});
 		});
-	}
-    
+	},
+
+	_findMainIdentifier: function () {
+		console.log("inFind");
+		var main_menu_addr, nrel_main_idtf_addr;
+		// Resolve sc-addrs.
+		SCWeb.core.Server.resolveScAddr(['ui_main_menu', 'nrel_main_idtf'], function (keynodes) {
+			main_menu_addr = keynodes['ui_main_menu'];
+			nrel_main_idtf_addr = keynodes['nrel_main_idtf'];
+			console.log(main_menu_addr);
+			console.log(nrel_main_idtf_addr);
+			// Resolve sc-addr of ui_menu_view_full_semantic_neighborhood node
+			window.sctpClient.iterate_elements(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F, [
+ 				main_menu_addr,
+ 				sc_type_arc_common | sc_type_const,
+ 				sc_type_link,
+ 				sc_type_arc_pos_const_perm,
+ 				nrel_main_idtf_addr]).
+			done(function(identifiers){	 
+				 window.sctpClient.get_link_content(identifiers[0][2],'string').done(function(content){
+				 	alert('Главный идентификатор: ' + content);
+				 });			
+			});
+		});
+    }
 };
